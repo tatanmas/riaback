@@ -4,6 +4,7 @@ import type {
   ProductListItem,
   ProductsInsights,
 } from "@/lib/types/product";
+import { LOW_STOCK_THRESHOLD } from "@/lib/config";
 import { getProductsForInsights, toProductListItem } from "@/lib/repositories/productRepository";
 
 /**
@@ -19,6 +20,18 @@ function computeAveragePrice(products: Product[]): number {
 
 function computeTotalStock(products: Product[]): number {
   return products.reduce((acc, p) => acc + p.stock, 0);
+}
+
+function computeAverageRating(products: Product[]): number {
+  if (!products.length) return 0;
+  const sum = products.reduce((acc, p) => acc + p.rating, 0);
+  return sum / products.length;
+}
+
+function computeAverageStock(products: Product[]): number {
+  if (!products.length) return 0;
+  const sum = products.reduce((acc, p) => acc + p.stock, 0);
+  return sum / products.length;
 }
 
 function computeMostCommonCategory(
@@ -47,7 +60,15 @@ function computeMostCommonCategory(
   return { name: maxCategory, count: maxCount };
 }
 
-function computeLowStockCount(products: Product[], threshold = 10): number {
+/**
+ * Computes the count of products with low stock
+ * Uses the centralized LOW_STOCK_THRESHOLD constant for consistency
+ * 
+ * @param products - Array of products to check
+ * @param threshold - Low stock threshold (defaults to LOW_STOCK_THRESHOLD)
+ * @returns Number of products with stock below threshold
+ */
+function computeLowStockCount(products: Product[], threshold = LOW_STOCK_THRESHOLD): number {
   return products.filter((p) => p.stock < threshold).length;
 }
 
@@ -78,6 +99,8 @@ export async function getProductsInsights(
   const products = await getProductsForInsights(filters);
 
   const averagePriceGlobal = computeAveragePrice(products);
+  const averageRatingGlobal = computeAverageRating(products);
+  const averageStockGlobal = computeAverageStock(products);
   const totalProducts = products.length;
   const totalStock = computeTotalStock(products);
   const mostCommonCategory = computeMostCommonCategory(products);
@@ -87,6 +110,8 @@ export async function getProductsInsights(
 
   return {
     averagePriceGlobal,
+    averageRatingGlobal,
+    averageStockGlobal,
     totalProducts,
     totalStock,
     mostCommonCategory,

@@ -47,7 +47,7 @@ export function toProductListItem(product: Product): ProductListItem {
 
 // Exported for testing purposes
 export function applyFilters(products: Product[], filters: ProductFilters): Product[] {
-  const { search, category, minPrice, maxPrice } = filters;
+  const { search, category, minPrice, maxPrice, maxStock } = filters;
 
   return products.filter((product) => {
     if (category && product.category !== category) {
@@ -59,6 +59,10 @@ export function applyFilters(products: Product[], filters: ProductFilters): Prod
     }
 
     if (typeof maxPrice === "number" && product.price > maxPrice) {
+      return false;
+    }
+
+    if (typeof maxStock === "number" && product.stock > maxStock) {
       return false;
     }
 

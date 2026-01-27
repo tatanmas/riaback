@@ -18,6 +18,18 @@ export async function GET(
 
   // In Next.js 16, `params` is a Promise in the type definition
   const { id: idParam } = await context.params;
+  
+  // Reserved route names that should not be handled by this dynamic route
+  const reservedRoutes = ['categories', 'insights'];
+  if (reservedRoutes.includes(idParam.toLowerCase())) {
+    // Return 404 to allow Next.js to try other routes
+    logger.warn("Reserved route name used as product id", { id: idParam });
+    return jsonWithCors(
+      { error: "Not found" },
+      404,
+    );
+  }
+  
   const id = Number.parseInt(idParam, 10);
 
   if (!Number.isFinite(id) || id <= 0) {

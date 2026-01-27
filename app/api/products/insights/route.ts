@@ -25,6 +25,7 @@ export async function GET(request: NextRequest) {
     category: searchParams.get("category") ?? undefined,
     minPrice: parseOptionalNumber(searchParams.get("minPrice")),
     maxPrice: parseOptionalNumber(searchParams.get("maxPrice")),
+    maxStock: parseOptionalNumber(searchParams.get("maxStock")),
   };
 
   logger.info("Computing product insights", { filters });

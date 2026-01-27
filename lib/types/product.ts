@@ -68,6 +68,7 @@ export interface ProductFilters {
   category?: string;
   minPrice?: number;
   maxPrice?: number;
+  maxStock?: number; // Filter products with stock <= maxStock (useful for low stock filtering)
 }
 
 export type ProductSort =
@@ -96,6 +97,8 @@ export interface PaginatedResult<T> {
  */
 export interface ProductsInsights {
   averagePriceGlobal: number;
+  averageRatingGlobal: number;
+  averageStockGlobal: number;
   totalProducts: number;
   totalStock: number;
   mostCommonCategory: {
