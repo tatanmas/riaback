@@ -1,4 +1,4 @@
-import type { Product, ProductFilters, ProductSort } from '@/lib/types/product';
+import type { Product, ProductFilters } from '@/lib/types/product';
 import {
   applyFilters,
   applySort,
