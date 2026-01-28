@@ -3,9 +3,16 @@ import { NextResponse } from "next/server";
 /**
  * Centralised CORS configuration for API routes.
  * This allows the Vite frontend on port 8080 to call the Next.js API on 3000.
+ *
+ * In development we default to the local Vite origin.
+ * In production we default to the DuckDNS origin used in the assessment deployment.
+ * Both can be overridden via the ALLOWED_ORIGIN env var.
  */
 
-const DEFAULT_ALLOWED_ORIGIN = "http://localhost:8080";
+const DEFAULT_ALLOWED_ORIGIN =
+  process.env.NODE_ENV === "production"
+    ? "http://tukitickets.duckdns.org:8080"
+    : "http://localhost:8080";
 
 export const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin":
